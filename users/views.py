@@ -12,8 +12,8 @@ def register(request):
 			username = form.cleaned_data.get('username')
 			# for displaying msg alerts
 			messages.success(request,
-				f'Account created for {username}!')
-			return redirect('blog-home')
+				f'Your account has been created! You can now login!')
+			return redirect('login')
 	else:
 		form = UserRegistrationForm()
 	return render(request,
