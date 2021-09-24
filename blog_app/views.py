@@ -4,6 +4,7 @@ from django.views.generic import (
 	DetailView,
 	CreateView,
 )
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Post
 
@@ -24,7 +25,7 @@ class BlogListView(ListView):
 class BlogDetailView(DetailView):
 	model = Post
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, CreateView):
 	model = Post
 	fields = ['title', 'content']
 
