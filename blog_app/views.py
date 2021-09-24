@@ -1,5 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import (
+	ListView,
+	DetailView,
+	CreateView,
+)
 
 from .models import Post
 
@@ -20,5 +24,14 @@ class BlogListView(ListView):
 class BlogDetailView(DetailView):
 	model = Post
 
+class BlogCreateView(CreateView):
+	model = Post
+	fields = ['title', 'content']
+
+	def form_valid(self, form):
+		form.instance.name = self.request.user
+		return super().form_valid(form)
+
+# about view
 def about(request):
 	return render(request, 'blog_app/about.html', { 'title': 'About' })
