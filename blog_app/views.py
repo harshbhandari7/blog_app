@@ -4,6 +4,7 @@ from django.views.generic import (
 	DetailView,
 	CreateView,
 	UpdateView,
+	DeleteView,
 )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
@@ -43,6 +44,18 @@ class BlogUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 		return super().form_valid(form)
 
 	# below func checks if the user is editing it's own post or not
+	def test_func(self):
+		post = self.get_object()
+		if self.request.user == post.name:
+			return True
+		else:
+			return False
+
+# template for delete view is post_confirm_delete.html
+class BlogDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+	model = Post
+	success_url = '/'  # redirects to home page after successful deletion
+
 	def test_func(self):
 		post = self.get_object()
 		if self.request.user == post.name:
