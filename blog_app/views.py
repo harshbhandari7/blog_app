@@ -3,6 +3,7 @@ from django.views.generic import (
 	ListView,
 	DetailView,
 	CreateView,
+	UpdateView,
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -17,7 +18,7 @@ def home(request):
 
 # posts list view
 class BlogListView(ListView):
-	model = Post
+	model = Post  # this ia a model, not request type check model.py
 	template_name = 'blog_app/home.html'  # <app_name>/<model>_<view_type>.html
 	context_object_name = 'blog_posts'
 	ordering = ['-date_posted']
@@ -32,6 +33,15 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
 	def form_valid(self, form):
 		form.instance.name = self.request.user
 		return super().form_valid(form)
+
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
+	model = Post
+	fields = ['title', 'content']
+	
+	def form_valid(self, form):
+		form.instance.name = self.request.user
+		return super().form_valid(form)
+
 
 # about view
 def about(request):
