@@ -5,7 +5,7 @@ from django.views.generic import (
 	CreateView,
 	UpdateView,
 )
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .models import Post
 
@@ -34,13 +34,21 @@ class BlogCreateView(LoginRequiredMixin, CreateView):
 		form.instance.name = self.request.user
 		return super().form_valid(form)
 
-class BlogUpdateView(LoginRequiredMixin, UpdateView):
+class BlogUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 	model = Post
 	fields = ['title', 'content']
-	
+
 	def form_valid(self, form):
 		form.instance.name = self.request.user
 		return super().form_valid(form)
+
+	# below func checks if the user is editing it's own post or not
+	def test_func(self):
+		post = self.get_object()
+		if self.request.user == post.name:
+			return True
+		else:
+			return False
 
 
 # about view
