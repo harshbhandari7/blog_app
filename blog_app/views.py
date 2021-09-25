@@ -23,6 +23,7 @@ class BlogListView(ListView):
 	template_name = 'blog_app/home.html'  # <app_name>/<model>_<view_type>.html
 	context_object_name = 'blog_posts'
 	ordering = ['-date_posted']
+	paginate_by = 5  # will show 3 items per page
 
 class BlogDetailView(DetailView):
 	model = Post
