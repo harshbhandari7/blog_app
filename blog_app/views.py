@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import (
 	ListView,
 	DetailView,
@@ -7,6 +7,7 @@ from django.views.generic import (
 	DeleteView,
 )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 
 from .models import Post
 
@@ -23,6 +24,20 @@ class BlogListView(ListView):
 	template_name = 'blog_app/home.html'  # <app_name>/<model>_<view_type>.html
 	context_object_name = 'blog_posts'
 	ordering = ['-date_posted']
+	paginate_by = 5  # will show 3 items per page
+
+
+# posts by specific users
+class UserBlogListView(ListView):
+	model = Post
+	template_name = 'blog_app/user_posts.html'
+	context_object_name = 'blog_posts'
+	paginate_by = 5
+
+	def get_queryset(self):
+		user = get_object_or_404(User, username=self.kwargs.get('username'))
+		return Post.objects.filter(name=user).order_by('-date_posted')
+
 
 class BlogDetailView(DetailView):
 	model = Post
